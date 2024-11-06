@@ -95,4 +95,4 @@ def submit_number():
         }), 500  # Internal Server Error
 
 if __name__ == '__main__':
-    app.run(debug=True, host="0.0.0.0", use_reloader=False)
+    app.run() #debug=True, host="0.0.0.0", use_reloader=False
