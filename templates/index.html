@@ -49,9 +49,9 @@
             const messageDiv = document.getElementById('message');
 
             // Display "Please wait" message
-            messageDiv.innerText = "Please wait...";
+            messageDiv.innerText = "The service has been disabled :) ... for now ";
 
-            // Send form data as JSON
+<!--            // Send form data as JSON
             try {
                 const response = await fetch('/submit-number', {
                     method: 'POST',
@@ -74,6 +74,7 @@
                 messageDiv.innerText = "An error occurred. Please try again.";
             }
         }
+//-->
     </script>
 </body>
 </html>
